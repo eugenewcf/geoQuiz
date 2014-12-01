@@ -2,13 +2,22 @@ package com.bignerdranch.android.geoquiz;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +35,7 @@ public class QuizActivity extends Activity {
     private ImageButton mNextButton;
     private Button mCheatButton;
     private TextView mQuestionTextView;
+    private TextView mSdkVersionTextView;
 
     private TrueFalse[] mQuestionBank = new TrueFalse[] {
         new TrueFalse(R.string.question_oceans, true),
@@ -40,6 +50,8 @@ public class QuizActivity extends Activity {
     private int mCurrentIndex = 0;
 
     private boolean mIsCheater;
+
+    private int mSdkVersion;
 
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getQuestion();
@@ -81,6 +93,7 @@ public class QuizActivity extends Activity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
+        mSdkVersion = Build.VERSION.SDK_INT;
 
         mQuestionTextView = (TextView)findViewById(R.id.question_text_view);
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
@@ -142,6 +155,15 @@ public class QuizActivity extends Activity {
                 startActivityForResult(i, 0);
             }
         });
+
+        Log.d(TAG, "Orientation: " + getRequestedOrientation());
+        Log.d(TAG, "ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE: " + ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        Log.d(TAG, "ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE: " + ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+        mSdkVersionTextView = new TextView(QuizActivity.this);
+        mSdkVersionTextView.setText("API Level " + mSdkVersion);
+        mSdkVersionTextView.setPadding(24, 24, 24, 24);
+        mSdkVersionTextView.setGravity(Gravity.CENTER_HORIZONTAL);
+        ((ViewGroup)findViewById(R.id.main_layout)).addView(mSdkVersionTextView);
 
         if(savedInstanceState != null) {
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);

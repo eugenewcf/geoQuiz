@@ -2,10 +2,15 @@ package com.bignerdranch.android.geoquiz;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -24,9 +29,11 @@ public class CheatActivity extends Activity {
 
     private boolean mAnswerIsTrue;
     private boolean mAnswerShown;
+    private int mSdkVersion;
 
     private TextView mAnswerTextView;
     private Button mShowAnswer;
+    private TextView mSdkVersionTextView;
 
     private void setAnswerShownResult(boolean isAnswerShown) {
         Intent data = new Intent();
@@ -39,6 +46,7 @@ public class CheatActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
         mAnswerShown = false;
+        mSdkVersion = Build.VERSION.SDK_INT;
 
         setAnswerShownResult(mAnswerShown);
 
@@ -59,6 +67,13 @@ public class CheatActivity extends Activity {
                 setAnswerShownResult(mAnswerShown);
             }
         });
+
+        mSdkVersionTextView = new TextView(CheatActivity.this);
+        mSdkVersionTextView.setPadding(24,24,24,24);
+        mSdkVersionTextView.setGravity(Gravity.CENTER);
+        mSdkVersionTextView.setText("API Level " + mSdkVersion);
+        ((ViewGroup) findViewById(R.id.cheat_main_layout)).addView(mSdkVersionTextView);
+
 
         if(savedInstanceState != null) {
             Log.d(TAG, "Load savedInstanceState.");
